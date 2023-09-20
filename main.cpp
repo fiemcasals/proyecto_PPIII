@@ -9,7 +9,7 @@ using namespace std;
 
 class Mascota{
 private:
-    string nombreMascota;
+    string nombreMascota; //yo tengo dos formas de visualizar un animal. en primer lugar desde el nombre que le asigno al objeto, ej perro, gato...y segundo por este nombre que se le carga
     bool vacunado;
 public:
     void modificarNombreMascota(){
@@ -23,7 +23,7 @@ public:
     void modificarVacunado(){
         char vacuna;
         cout<<"ingrese true/false si esta o no vacunado el animal (t/f)"<<endl;
-        cin.ignore();
+        //cin.ignore(); //hay que estudiar mejor la funcion porque esto hace que se trabe el proceso, no se por que..
         cin>>vacuna;
 
         vacunado=(vacuna == 't' || vacuna == 'T');
@@ -39,7 +39,7 @@ private:
 public:
     void ingresarFechaVenta(){
         string fecha;
-        cout<<"En que fecha se vendio la mascota (19092023)"<<endl;
+        cout<<"En que fecha se vendio la mascota (dd/mm/aaaa)"<<endl;
         cin>>fecha;
 
         while (fecha.length() != 10 || fecha[2] != '/' || fecha[5] != '/' ||
@@ -84,10 +84,12 @@ public:
 int main() {
     TiendaMascotas losTresHermanos;
 
+    //lo ideal seria que pueda agregar varios objetos perros desde el usuario y no tan macheteado como esta ahora...
     Mascota perro;
     Mascota gato;
     Mascota loro;
 
+    //hay que crear polimorfismo para definir exactamente cuando pregunto por la raza, raza de que de un perro o un gato
     perro.modificarNombreMascota();
     perro.modificarVacunado();
 
@@ -108,9 +110,9 @@ int main() {
     segunda.ingresarFechaVenta();
     segunda.ingresarPrecioVenta();
 
-    losTresHermanos.agregarVenta(primera);
-    losTresHermanos.agregarVenta(segunda);
     losTresHermanos.consultaVenta();
+
+
 
     return 0;
 }
