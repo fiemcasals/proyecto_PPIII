@@ -1,9 +1,6 @@
 #include <iostream>
 #include <string>
 
-#include <sstream> // Agrega la biblioteca para manipular strings
-
-//el chat me dijo que podia agregarla pero yo ya tengo la iostream...
 
 using namespace std;
 
@@ -11,25 +8,34 @@ class Mascota{
 private:
     string nombreMascota;
     bool vacunado;
+    int edad;
+    float precio;
 public:
-    void modificarNombreMascota(){
-        string nombre;
-        cout<<"ingrese el tipo / raza de la mascota"<<endl;
-        cin.ignore();//limpia el buffer de entrada
-        getline(cin, nombre); // toma la linea entera, interpreto que no se corta en el espacio
-
-        nombreMascota=nombre;
+    void setNombreMascota(){
+        cout<<"ingrese el nombre de la Mascota: ";
+        getline(cin, nombreMascota); // toma la linea entera, interpreto que no se corta en el espacio
+        cout<<"\nNombre:"<<nombreMascota<<endl;
     }
-    void modificarVacunado(){
+    void setVacunado(){
         char vacuna;
-        cout<<"ingrese true/false si esta o no vacunado el animal (t/f)"<<endl;
-        cin.ignore();
+        cout<<"ingrese true/false si esta o no vacunado el animal (t/f): ";
         cin>>vacuna;
-
-        vacunado=(vacuna == 't' || vacuna == 'T');
+        vacunado=(vacuna == 't' || vacuna == 'T'); //si es true pone automaticamente un 1, sino un 0
+    }
+    void setEdad(){
+        cout<<"Ingrese la edad de la Mascota: ";
+        cin>>edad;
+    }
+    void setPrecio(){
+        cout<<"Ingrese el Precio de la Mascota: ";
+        cin>>precio;
     }
 };
 
+class Gato{
+
+};
+/*
 class Venta{
 private:
     string fechaVenta;
@@ -39,9 +45,9 @@ private:
 public:
     void ingresarFechaVenta(){
         string fecha;
-        cout<<"En que fecha se vendio la mascota (19092023)"<<endl;
+        cout<<"En que fecha se vendio la mascota (dd/mm/aaaa)"<<endl;
         cin>>fecha;
-
+        //verifica cada digito de la fecha ingresada para ver si esta en formato correcto
         while (fecha.length() != 10 || fecha[2] != '/' || fecha[5] != '/' ||
             !isdigit(fecha[0]) || !isdigit(fecha[1]) || !isdigit(fecha[3]) ||
             !isdigit(fecha[4]) || !isdigit(fecha[6]) || !isdigit(fecha[7]) ||
@@ -52,6 +58,7 @@ public:
 
         fechaVenta=fecha;
     }
+
     void ingresarPrecioVenta(){
         int precio;
         cout<<"A que precio se vendio la mascota"<<endl;
@@ -80,23 +87,32 @@ public:
     }
 };
 
-
+*/
 int main() {
-    TiendaMascotas losTresHermanos;
+    //TiendaMascotas losTresHermanos;
 
     Mascota perro;
     Mascota gato;
     Mascota loro;
 
-    perro.modificarNombreMascota();
-    perro.modificarVacunado();
+    perro.setNombreMascota();
+    perro.setVacunado();
+    perro.setEdad();
+    perro.setPrecio();
 
-    gato.modificarNombreMascota();
-    gato.modificarVacunado();
 
-    loro.modificarNombreMascota();
-    loro.modificarVacunado();
+    gato.setNombreMascota();
+    gato.setVacunado();
+    gato.setEdad();
+    gato.setPrecio();
 
+
+    loro.setNombreMascota();
+    loro.setVacunado();
+    loro.setEdad();
+    loro.setPrecio();
+
+    /*
     Venta primera;
     Venta segunda;
 
@@ -111,6 +127,6 @@ int main() {
     losTresHermanos.agregarVenta(primera);
     losTresHermanos.agregarVenta(segunda);
     losTresHermanos.consultaVenta();
-
+*/
     return 0;
 }
