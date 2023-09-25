@@ -22,7 +22,19 @@ public:
     string getNombreMascota() const {
         return nombreMascota;
     }
+    bool getVacunado() const {
+        return vacunado;
+    }
 
+    int getPrecioVenta() const {
+        return precioVenta;
+    }
+    void modificarVacunado() {
+        string vacuna;
+        cout << "Ingrese si esta vacunado el animal (si/no): ";
+        cin >> vacuna;
+        vacunado = (vacuna=="si");
+    }
 };
 
 class Gato : public Mascota{
@@ -141,38 +153,213 @@ void NuevaMascota() {
     Mascota M1(nombre, vac, edad, precio);
 }
 
+class Venta {
+private:
+    string fechaVenta;
+    vector<Mascota> mascotaVendida;
+    float ventaTotal;
+
+public:
+    Venta(): ventaTotal(0){};
+
+    void setMascotaVendida(const Mascota &mascota) {
+        mascotaVendida.push_back(mascota);//inserto al final del vector la Mascota.
+    }
+
+    void ingresarFechaVenta() {
+        cout << "En qué fecha se vendió la mascota (dd/mm/aaaa): ";
+        cin >> fechaVenta;
+    }
+
+    string getFechaVenta() const {
+        return fechaVenta;
+    }
+
+    void seeAllPetSold(){
+        int i=0;
+        for (int i = 0; i < mascotaVendida.size(); i++) {
+            cout<<mascotaVendida[i].getNombreMascota()<<"en la posicion: "<<i<<endl;
+            i++;
+        }
+    }
+    const Mascota &getMascotaVendida(int index) const { //estos dos const hacen referencia a que no se modificara en la funcion al objeto llamado ni se puede modificar el objeto retornado
+        return mascotaVendida[index];
+    }
+
+};
+
+class TiendaMascotas {
+private:
+    vector<Venta> ventas;
+    vector<Mascota> stock;
+    int totalRecaudado; // Esta variable se inicializará en el constructor
+
+public:
+    TiendaMascotas() : totalRecaudado(0) {} // Inicializa totalRecaudado en 0 en el constructor
+
+    void sumarVenta(int dinero){
+        totalRecaudado+=dinero;
+    }
+    void agregarVenta(const Venta &ventaMascota) {
+        if (ventas.size() < 100) {
+            ventas.push_back(ventaMascota); //ventaMascota es el objeto vendido, push_back permite agregar el objeto dentro del vector en el final. y ventas es el nombre del vector
+            descontarAnimal(ventaMascota.getMascotaVendida().getNombreMascota());
+            sumarVenta(ventaMascota.getMascotaVendida().getPrecioVenta());
+        } else {
+            cout << "Se ha alcanzado el límite de ventas (100)." << endl;
+        }
+    }
+    void mostrarStockVentas(){
+        if(ventas.begin()!=ventas.end()){
+            vector<Venta>::iterator it = ventas.begin(); // Utiliza el tipo de dato explícito
+
+            while (it != ventas.end()) {
+                cout<<it->getMascotaVendida().getNombreMascota()<<endl;
+                ++it; // Incrementar el iterador
+            }
+        }else{
+            cout<<"La lista esta vacia"<<endl;
+        }
+
+    }
+    void mostrarStock(){
+        if(stock.begin()!=stock.end()){
+            vector<Mascota>::iterator it = stock.begin(); // Utiliza el tipo de dato explícito
+
+            while (it != stock.end()) {
+                cout<<it->getNombreMascota()<<endl;
+                ++it; // Incrementar el iterador
+            }
+        }else{
+            cout<<"La lista esta vacia"<<endl;
+        }
+    }
+
+    string seleccionarMascota(){
+        string mascotaSeleccionada;
+        while (true){
+            cout<<"ingrese el nombre de la mascota a vender o la palabra 'stock' para ver el stock disponible"<<endl;
+            cin>>mascotaSeleccionada;
+            if (mascotaSeleccionada=="stock"){
+                mostrarStock();
+            }else{
+                //funcion que retorna la mascota acorde al nombre suministrado
+                return mascotaSeleccionada;
+            }
+        }}
+    void consultaVenta() {
+        cout << "Se han vendido un total de " << ventas.size() << " mascotas." << endl;
+        cout << "El total recaudado es de:" << totalRecaudado << endl;
+
+        cout<<"La lista de ventas es: "<<endl;
+        mostrarStockVentas();
+
+    }
+    void agregarMascotaNueva(const Mascota &nuevaMascota){
+        stock.push_back(nuevaMascota);
+    }
+
+    void  gettotalRecaudado() const{
+        cout<<"El total recaudado es "<< totalRecaudado<<endl;
+    }
+    Mascota &encontrarAnimalStock(const string &nombreAnimal) {
+        vector<Mascota>::iterator it = stock.begin(); // Utiliza el tipo de dato explícito
+
+        // Buscar el animal en el stock por su nombre
+        while (it != stock.end()) {
+            if (it->getNombreMascota() == nombreAnimal) { // obtiene el nombre del objeto y lo compara con el nombre buscado
+                return *it; // retorna el animal del stock encontrado
+            }
+            ++it; // Incrementar el iterador
+        }
+
+        // Si no se encuentra el animal:
+        throw runtime_error("Animal no encontrado en el stock");
+    }
+
+    void descontarAnimal(const string &nombreAnimal) {
+        bool encontrado = false;
+        vector<Mascota>::iterator it = stock.begin(); // Utiliza el tipo de dato explícito
+
+        // Buscar el animal en el stock por su nombre
+        while (it != stock.end()) {
+            if (it->getNombreMascota() == nombreAnimal) { // obtiene el nombre del objeto y lo compara con el nombre buscado
+                it = stock.erase(it); // Eliminar el animal del stock y actualizar el iterador
+                encontrado = true;
+                break; // Salir del bucle una vez que se haya encontrado y eliminado el animal
+            }
+            ++it; // Incrementar el iterador
+        }
+
+        if (encontrado) {
+            cout << "Animal descontado exitosamente del stock." << endl;
+        } else {
+            cout << "Animal no encontrado en el stock." << endl;
+        }
+    }
+
+};
 
 
 int main() {
-    //TiendaMascotas losTresHermanos;
-    //NuevaMascota();
-    Perro miPerro("Buddy",1, 3, 500.0);
-    Gato miGato("Whiskers", 1, 2, 300.0);
-    Pajaro miPajaro("Tweety", 0, 1, 100.0);
 
-    Mascota* animales[] = {&miPerro, &miGato, &miPajaro};
+    TiendaMascotas losTresHermanos;
 
-    for (int i=0;i<3;i++) {
-        animales[i]->comunicacion();
+    string respuesta = "si";
+
+    while (respuesta != "salir") {
+
+        string respuestaAnimales;
+        cout << "Desea cargar un nuevo animal a la tienda? (si/no)" << endl;
+        cin >> respuestaAnimales;
+
+        //si se desea cargar un nuevo animal se procede a cargar todos los campos
+        if (respuestaAnimales == "si") {
+
+            Mascota nuevaMascota;
+            nuevaMascota.setNombreMascota();
+            nuevaMascota.modificarVacunado();
+            nuevaMascota.ingresarPrecioVenta();
+            losTresHermanos.agregarMascotaNueva(nuevaMascota);
+
+            //se procede a leer el nombre de la mascota agregada en el stock
+            cout << "Mascota agregada al stock: " << nuevaMascota.getNombreMascota() << endl;
+        }
+
+        string respuestaVentas;
+        cout << "Se realizo una venta? (si/no)" << endl;
+        cin >> respuestaVentas;
+        /*
+        if (respuestaVentas == "si") {
+            //se crea la venta sin detalles
+            Venta nuevaVenta;
+            // hay que definir qué mascota se vendió, puede no haberse vendido la última mascota cargada
+
+
+            string continuar;
+            while(continuar!="continuar"){
+                string mascotaSeleccionada=losTresHermanos.seleccionarMascota();
+                //debo cargar la mascota en nuevaMascota
+                Mascota nuevaMascotaVendida=losTresHermanos.encontrarAnimalStock(mascotaSeleccionada);
+                nuevaVenta.setMascotaVendida(nuevaMascotaVendida);
+                nuevaVenta.ingresarFechaVenta();
+                cout<<"Quiere realizar otra compra ('si'/'continuar')?"<<endl;
+                cin>>continuar;
+            }
+
+            losTresHermanos.agregarVenta(nuevaVenta);
+        }
+
+        cout << "Desea seguir cargando ventas o animales? (si/salir)"<<endl;
+        cin >> respuesta;
+    */
     }
 
+    losTresHermanos.consultaVenta();
+    cout<<"El stock restante es: "<<endl;
+    losTresHermanos.mostrarStock();
+    losTresHermanos.gettotalRecaudado();
 
     return 0;
 }
 
-    /*
-    Venta primera;
-    Venta segunda;
-
-    primera.definirMascotaVendida(perro);
-    primera.ingresarFechaVenta();
-    primera.ingresarPrecioVenta();
-
-    segunda.definirMascotaVendida(gato);
-    segunda.ingresarFechaVenta();
-    segunda.ingresarPrecioVenta();
-
-    losTresHermanos.agregarVenta(primera);
-    losTresHermanos.agregarVenta(segunda);
-    losTresHermanos.consultaVenta();
-*/
