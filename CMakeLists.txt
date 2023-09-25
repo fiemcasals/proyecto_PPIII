@@ -3,4 +3,4 @@ project(proyecto_PPIII)
 
 set(CMAKE_CXX_STANDARD 98)
 
-add_executable(proyecto_PPIII main.cpp)
+add_executable(proyecto_PPIII main.cpp Mascota.h Venta.h TiendaMascotas.h)
