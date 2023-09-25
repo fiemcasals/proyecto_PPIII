@@ -1,40 +1,71 @@
 #include <iostream>
 #include <string>
-
+#include <vector>
 
 using namespace std;
 
 class Mascota{
 private:
     string nombreMascota;
-    bool vacunado;
+
     int edad;
-    float precio;
+    double precioVenta;
+    string FormaDeComunicarse;
+protected:
+    bool vacunado;//nose porque me tira error si no esta en protected, pero en los demas no
 public:
-    void setNombreMascota(){
-        cout<<"ingrese el nombre de la Mascota: ";
-        getline(cin, nombreMascota); // toma la linea entera, interpreto que no se corta en el espacio
-        cout<<"\nNombre:"<<nombreMascota<<endl;
+    Mascota(const string& n, int v, int e, double p) : nombreMascota(n), vacunado(v), edad(e), precioVenta(p) {//constructor con los datos que le mando
     }
-    void setVacunado(){
-        char vacuna;
-        cout<<"ingrese true/false si esta o no vacunado el animal (t/f): ";
-        cin>>vacuna;
-        vacunado=(vacuna == 't' || vacuna == 'T'); //si es true pone automaticamente un 1, sino un 0
+    virtual void comunicacion(){
+        cout<<"No se como comunicarme, no soy de ninguna especie"<<endl;
     }
-    void setEdad(){
-        cout<<"Ingrese la edad de la Mascota: ";
-        cin>>edad;
+    string getNombreMascota() const {
+        return nombreMascota;
     }
-    void setPrecio(){
-        cout<<"Ingrese el Precio de la Mascota: ";
-        cin>>precio;
+
+};
+
+class Gato : public Mascota{
+private:
+    string Pelaje;
+public:
+    void setPelaje(){
+        cout<<"ingrese el pelaje del Gato: ";
+        getline(cin, Pelaje); // toma la linea entera, no se corta en el espacio
+    }
+    Gato(const string& nombre, bool vacuna, int edad, double precio) : Mascota(nombre, vacunado, edad, precio) {}
+
+    void comunicacion() {
+        cout << getNombreMascota() << " dice: Miau" << std::endl;
     }
 };
 
+class Pajaro : public Mascota{
+private:
+    string Plumaje;
+public:
+    void setPlumaje(){
+        cout<<"ingrese el plumaje del Pajaro: ";
+        getline(cin, Plumaje); // toma la linea entera, interpreto que no se corta en el espacio
+    }
+    Pajaro(const string& nombre, bool vacuna, int edad, double precio) : Mascota(nombre, vacunado, edad, precio) {}
+    void comunicacion() {
+        cout << getNombreMascota() << " dice: Pio Pio" << std::endl;
+    }
+};
 
-class Gato{
-
+class Perro : public Mascota{
+private:
+    string Raza;
+public:
+    void setRaza(){
+        cout<<"ingrese el raza del Pajaro: ";
+        getline(cin, Raza); // toma la linea entera, interpreto que no se corta en el espacio
+    }
+    Perro(const string& nombre, bool vacuna, int edad, double precio) : Mascota(nombre, vacunado, edad, precio) {}
+    void comunicacion() {
+        cout << getNombreMascota() << " dice: Guau" << std::endl;
+    }
 };
 /*
 class Venta{
@@ -61,10 +92,10 @@ public:
     }
 
     void ingresarPrecioVenta(){
-        int precio;
-        cout<<"A que precio se vendio la mascota"<<endl;
-        cin>>precio;
-        precioVenta=precio;
+        int precioVenta;
+        cout<<"A que precioVenta se vendio la mascota"<<endl;
+        cin>>precioVenta;
+        precioVenta=precioVenta;
     }
     void definirMascotaVendida(Mascota MascotaVendida){
 
@@ -88,30 +119,46 @@ public:
     }
 };
 
+
 */
+
+void NuevaMascota() {
+    string nombre;
+    int edad, vacuna;
+    float precio;
+    char vac;
+    cout << "ingrese el nombre de la Mascota:";
+    //cin.ignore();
+    getline(cin, nombre); // toma la linea entera, interpreto que no se corta en el espacio
+    cout<<"ingrese true/false si esta o no vacunado el animal (t/f)";
+    cin>>vac;
+    vacuna=(vac == 't' || vac == 'T')?1:0;
+
+    cout << "Ingrese la edad de la Mascota:";
+    cin >> edad;
+    cout << "Ingrese el Precio de la Mascota:";
+    cin >> precio;
+    Mascota M1(nombre, vac, edad, precio);
+}
+
+
+
 int main() {
     //TiendaMascotas losTresHermanos;
+    //NuevaMascota();
+    Perro miPerro("Buddy",1, 3, 500.0);
+    Gato miGato("Whiskers", 1, 2, 300.0);
+    Pajaro miPajaro("Tweety", 0, 1, 100.0);
 
-    Mascota perro;
-    Mascota gato;
-    Mascota loro;
+    Mascota* animales[] = {&miPerro, &miGato, &miPajaro};
 
-    perro.setNombreMascota();
-    perro.setVacunado();
-    perro.setEdad();
-    perro.setPrecio();
-
-
-    gato.setNombreMascota();
-    gato.setVacunado();
-    gato.setEdad();
-    gato.setPrecio();
+    for (int i=0;i<3;i++) {
+        animales[i]->comunicacion();
+    }
 
 
-    loro.setNombreMascota();
-    loro.setVacunado();
-    loro.setEdad();
-    loro.setPrecio();
+    return 0;
+}
 
     /*
     Venta primera;
@@ -129,5 +176,3 @@ int main() {
     losTresHermanos.agregarVenta(segunda);
     losTresHermanos.consultaVenta();
 */
-    return 0;
-}
