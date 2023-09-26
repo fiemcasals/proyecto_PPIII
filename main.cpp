@@ -5,14 +5,12 @@
 using namespace std;
 
 class Mascota{
-private:
+protected: //para que las clases hijas puedan heredar sus atributos
     string nombreMascota;
-
     int edad;
     double precioVenta;
     string FormaDeComunicarse;
-protected:
-    bool vacunado;//nose porque me tira error si no esta en protected, pero en los demas no
+    bool vacunado;
 public:
     Mascota(const string& n, int v, int e, double p) : nombreMascota(n), vacunado(v), edad(e), precioVenta(p) {//constructor con los datos que le mando
     }
@@ -39,13 +37,9 @@ public:
 
 class Gato : public Mascota{
 private:
-    string Pelaje;
+    string pelaje;
 public:
-    void setPelaje(){
-        cout<<"ingrese el pelaje del Gato: ";
-        getline(cin, Pelaje); // toma la linea entera, no se corta en el espacio
-    }
-    Gato(const string& nombre, bool vacuna, int edad, double precio) : Mascota(nombre, vacunado, edad, precio) {}
+    Gato(const string& nombre, bool vacuna, int edad, double precio, const string& pelaje) : Mascota(nombre, vacunado, edad, precio) , pelaje(pelaje){}
 
     void comunicacion() {
         cout << getNombreMascota() << " dice: Miau" << std::endl;
@@ -54,13 +48,9 @@ public:
 
 class Pajaro : public Mascota{
 private:
-    string Plumaje;
+    string plumaje;
 public:
-    void setPlumaje(){
-        cout<<"ingrese el plumaje del Pajaro: ";
-        getline(cin, Plumaje); // toma la linea entera, interpreto que no se corta en el espacio
-    }
-    Pajaro(const string& nombre, bool vacuna, int edad, double precio) : Mascota(nombre, vacunado, edad, precio) {}
+    Pajaro(const string& nombre, bool vacuna, int edad, double precio, const string& plumaje) : Mascota(nombre, vacunado, edad, precio) , plumaje(plumaje) {}
     void comunicacion() {
         cout << getNombreMascota() << " dice: Pio Pio" << std::endl;
     }
@@ -68,13 +58,9 @@ public:
 
 class Perro : public Mascota{
 private:
-    string Raza;
+    string raza;
 public:
-    void setRaza(){
-        cout<<"ingrese el raza del Pajaro: ";
-        getline(cin, Raza); // toma la linea entera, interpreto que no se corta en el espacio
-    }
-    Perro(const string& nombre, bool vacuna, int edad, double precio) : Mascota(nombre, vacunado, edad, precio) {}
+    Perro(const string& nombre, bool vacuna, int edad, double precio, const string& raza) : Mascota(nombre, vacunado, edad, precio) , raza(raza) {}
     void comunicacion() {
         cout << getNombreMascota() << " dice: Guau" << std::endl;
     }
@@ -134,11 +120,13 @@ public:
 
 */
 
-void NuevaMascota() {
+Mascota crearNuevaMascota() {
     string nombre;
     int edad, vacuna;
     float precio;
     char vac;
+    int tipo;
+
     cout << "ingrese el nombre de la Mascota:";
     //cin.ignore();
     getline(cin, nombre); // toma la linea entera, interpreto que no se corta en el espacio
@@ -150,7 +138,41 @@ void NuevaMascota() {
     cin >> edad;
     cout << "Ingrese el Precio de la Mascota:";
     cin >> precio;
-    Mascota M1(nombre, vac, edad, precio);
+
+    cout << "Seleccione el tipo de animal (1: Perro, 2: Gato, 3: Pajaro): ";
+    cin >> tipo;
+
+    Mascota* nuevaMascota = NULL;
+
+    switch (tipo) {
+        case 1: {
+            string raza;
+            cout << "Ingrese la raza del perro: ";
+            cin >> raza;
+            nuevaMascota = new Perro(nombre, vacuna, edad, precio, raza);
+            break;
+        }
+        case 2: {
+            string pelaje;
+            cout << "Ingrese el tipo de pelaje del gato: ";
+            cin >> pelaje;
+            nuevaMascota = new Gato(nombre, vacuna, edad, precio, pelaje);
+            break;
+        }
+        case 3: {
+            string plumaje;
+            cout << "Ingrese el tipo de plumaje del pajaro: ";
+            cin >> plumaje;
+            nuevaMascota = new Pajaro(nombre, vacuna, edad, precio, plumaje);
+            break;
+        }
+        default:
+            cout << "Tipo de animal no válido." << std::endl;
+            break;
+    }
+
+    return *nuevaMascota;
+
 }
 
 class Venta {
@@ -307,7 +329,7 @@ int main() {
 
     string respuesta = "si";
 
-    while (respuesta != "salir") {
+    while (respuesta != "no") {
 
         string respuestaAnimales;
         cout << "Desea cargar un nuevo animal a la tienda? (si/no)" << endl;
@@ -316,20 +338,19 @@ int main() {
         //si se desea cargar un nuevo animal se procede a cargar todos los campos
         if (respuestaAnimales == "si") {
 
-            Mascota nuevaMascota;
-            nuevaMascota.setNombreMascota();
-            nuevaMascota.modificarVacunado();
-            nuevaMascota.ingresarPrecioVenta();
+            const Mascota &nuevaMascota = crearNuevaMascota();//en la creacion de la mascota se elige el tipo y se ingresan los datos
             losTresHermanos.agregarMascotaNueva(nuevaMascota);
 
             //se procede a leer el nombre de la mascota agregada en el stock
             cout << "Mascota agregada al stock: " << nuevaMascota.getNombreMascota() << endl;
         }
 
+
+
         string respuestaVentas;
         cout << "Se realizo una venta? (si/no)" << endl;
         cin >> respuestaVentas;
-        /*
+
         if (respuestaVentas == "si") {
             //se crea la venta sin detalles
             Venta nuevaVenta;
@@ -352,11 +373,12 @@ int main() {
 
         cout << "Desea seguir cargando ventas o animales? (si/salir)"<<endl;
         cin >> respuesta;
-    */
+
     }
 
     losTresHermanos.consultaVenta();
     cout<<"El stock restante es: "<<endl;
+
     losTresHermanos.mostrarStock();
     losTresHermanos.gettotalRecaudado();
 
