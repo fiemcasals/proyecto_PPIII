@@ -253,8 +253,6 @@ public:
             ++it; // Incrementar el iterador
         }
 
-        // Si no se encuentra el animal:
-        cout<<"Animal no encontrado en el stock"<<endl;
     }
 
     void descontarAnimal(const string &nombreAnimal) {
@@ -273,8 +271,6 @@ public:
 
         if (encontrado) {
             cout << "Animal descontado exitosamente del stock." << endl;
-        } else {
-            cout << "Animal no encontrado en el stock." << endl;
         }
     }
 };
