@@ -9,7 +9,6 @@ protected: //para que las clases hijas puedan heredar sus atributos
     string nombreMascota;
     int edad;
     double precioVenta;
-    string FormaDeComunicarse;
     bool vacunado;
 public:
     Mascota(const string& n, int v, int e, double p) : nombreMascota(n), vacunado(v), edad(e), precioVenta(p) {//constructor con los datos que le mando
@@ -42,7 +41,7 @@ public:
     Gato(const string& nombre, bool vacuna, int edad, double precio, const string& pelaje) : Mascota(nombre, vacunado, edad, precio) , pelaje(pelaje){}
 
     void comunicacion() {
-        cout << getNombreMascota() << " dice: Miau" << std::endl;
+        cout << getNombreMascota() << " dice: Miau" << endl;
     }
 };
 
@@ -52,7 +51,7 @@ private:
 public:
     Pajaro(const string& nombre, bool vacuna, int edad, double precio, const string& plumaje) : Mascota(nombre, vacunado, edad, precio) , plumaje(plumaje) {}
     void comunicacion() {
-        cout << getNombreMascota() << " dice: Pio Pio" << std::endl;
+        cout << getNombreMascota() << " dice: Pio Pio" << endl;
     }
 };
 
@@ -62,11 +61,11 @@ private:
 public:
     Perro(const string& nombre, bool vacuna, int edad, double precio, const string& raza) : Mascota(nombre, vacunado, edad, precio) , raza(raza) {}
     void comunicacion() {
-        cout << getNombreMascota() << " dice: Guau" << std::endl;
+        cout << getNombreMascota() << " dice: Guau" << endl;
     }
 };
 
-Mascota crearNuevaMascota() {
+Mascota* crearNuevaMascota() {
     string nombre;
     int edad, vacuna;
     float precio;
@@ -113,11 +112,11 @@ Mascota crearNuevaMascota() {
             break;
         }
         default:
-            cout << "Tipo de animal no válido." << std::endl;
+            cout << "Tipo de animal no válido." << endl;
             break;
     }
 
-    return *nuevaMascota;
+    return nuevaMascota;
 
 }
 
@@ -161,7 +160,7 @@ public:
 class TiendaMascotas {
 private:
     vector<Venta> ventas;
-    vector<Mascota> stock;
+    vector<Mascota*> stock;
     int totalRecaudado; // Esta variable se inicializará en el constructor
 
 public:
@@ -234,7 +233,7 @@ public:
         mostrarStockVentas();
 
     }
-    void agregarMascotaNueva(const Mascota &nuevaMascota){
+    void agregarMascotaNueva(Mascota* nuevaMascota){
         stock.push_back(nuevaMascota);
     }
 
@@ -258,11 +257,11 @@ public:
 
     void descontarAnimal(const string &nombreAnimal) {
         bool encontrado = false;
-        vector<Mascota>::iterator it = stock.begin(); // Utiliza el tipo de dato explícito
+        vector<Mascota*>::iterator it = stock.begin(); // Utiliza el tipo de dato explícito
 
         // Buscar el animal en el stock por su nombre
         while (it != stock.end()) {
-            if (it->getNombreMascota() == nombreAnimal) { // obtiene el nombre del objeto y lo compara con el nombre buscado
+            if ((*it)->getNombreMascota() == nombreAnimal) { // Acceder al miembro usando (*it)
                 it = stock.erase(it); // Eliminar el animal del stock y actualizar el iterador
                 encontrado = true;
                 break; // Salir del bucle una vez que se haya encontrado y eliminado el animal
@@ -277,8 +276,6 @@ public:
         }
     }
 
-};
-
 
 int main() {
 
@@ -289,14 +286,16 @@ int main() {
     while (respuesta == "si") {
 
         //si se desea cargar un nuevo animal se procede a cargar todos los campo
-        const Mascota &nuevaMascota = crearNuevaMascota();//en la creacion de la mascota se elige el tipo y se ingresan los datos
+        Mascota *nuevaMascota = crearNuevaMascota();//en la creacion de la mascota se elige el tipo y se ingresan los datos
         losTresHermanos.agregarMascotaNueva(nuevaMascota);
-
+        nuevaMascota->comunicacion();
         //se procede a leer el nombre de la mascota agregada en el stock
-        cout << "Mascota agregada al stock: " << nuevaMascota.getNombreMascota() << endl;
+        cout << "Mascota agregada al stock: " << nuevaMascota->getNombreMascota() << endl;
         cout << "Desea cargar un nuevo animal a la tienda? (si/no)" << endl;
         cin >> respuesta;
+
     }
+
 
         string respuestaVentas;
         cout << "Se realizo una venta? (si/no)" << endl;
@@ -333,4 +332,3 @@ int main() {
 
     return 0;
 }
-
