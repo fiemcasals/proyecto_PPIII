@@ -23,14 +23,14 @@ public:
         return vacunado;
     }
 
-    int getPrecioVenta() const {
+    double getPrecioVenta() const {
         return precioVenta;
     }
-    void modificarVacunado() {
-        string vacuna;
-        cout << "Ingrese si esta vacunado el animal (si/no): ";
-        cin >> vacuna;
-        vacunado = (vacuna=="si");
+    int getEdad() const {
+        return edad;
+    }
+    void Vacunar() {
+        vacunado = 1;
     }
 };
 
@@ -135,7 +135,7 @@ public:
     }
 
     void ingresarFechaVenta() {
-        cout << "En qué fecha se vendió la mascota (dd/mm/aaaa): ";
+        cout << "En que fecha se vendio la mascota (dd/mm/aaaa): ";
         cin >> fechaVenta;
     }
 
@@ -143,13 +143,6 @@ public:
         return fechaVenta;
     }
 
-    void seeAllPetSold(){
-        int i=0;
-        for (int i = 0; i < mascotaVendida.size(); i++) {
-            cout<<mascotaVendida[i].getNombreMascota()<<"en la posicion: "<<i<<endl;
-            i++;
-        }
-    }
     const Mascota &getMascotaVendida(int index) const { //estos dos const hacen referencia a que no se modificara en la funcion al objeto llamado ni se puede modificar el objeto retornado
         return mascotaVendida[index];
     }
@@ -190,10 +183,10 @@ public:
         int i = 0;
         if (ventas.begin() != ventas.end()) {
             vector<Venta>::iterator it = ventas.begin(); // Utiliza el tipo de dato explícito
-            cout<<"Nombre\tPrecio\tVacunado"<<endl;
+            cout<<"Nombre\tPrecio\tEdad\tVacunado\tFecha Venta"<<endl;
 
             while (it != ventas.end()) {
-                cout << it->getMascotaVendida(i).getNombreMascota() <<"\t"<< it->getMascotaVendida(i).getPrecioVenta()<<"\t"<<it->getMascotaVendida(i).getVacunado()<<endl;
+                cout << it->getMascotaVendida(i).getNombreMascota() <<"\t"<< it->getMascotaVendida(i).getPrecioVenta()<<"\t"<<it->getMascotaVendida(i).getEdad()<<"\t"<<it->getMascotaVendida(i).getVacunado()<<"\t"<<it->getFechaVenta()<<endl;
                 ++it; // Incrementar el iterador
                 i++;
             }
@@ -207,9 +200,9 @@ public:
     void mostrarStock() {
         if (stock.begin() != stock.end()) {
             vector<Mascota *>::iterator it = stock.begin(); // Utiliza el tipo de dato explícito
-            cout<<"Nombre\tPrecio\tVacunado"<<endl;
+            cout<<"Nombre\tPrecio\tEdad\tVacunado"<<endl;
             while (it != stock.end()) {
-                cout << (*it)->getNombreMascota() <<"\t"<< (*it)->getPrecioVenta()<<"\t"<<(*it)->getVacunado()<<endl;
+                cout << (*it)->getNombreMascota() <<"\t"<< (*it)->getPrecioVenta()<<"\t"<< (*it)->getEdad()<<"\t"<<(*it)->getVacunado()<<endl;
                 ++it; // Incrementar el iterador
             }
         } else {
@@ -254,15 +247,14 @@ public:
 
         // Buscar el animal en el stock por su nombre
         while (it != stock.end()) {
-            if ((*it)->getNombreMascota() ==
-                nombreAnimal) { // obtiene el nombre del objeto y lo compara con el nombre buscado
+            if ((*it)->getNombreMascota() == nombreAnimal) { // obtiene el nombre del objeto y lo compara con el nombre buscado
                 return *it; // retorna el animal del stock encontrado
             }
             ++it; // Incrementar el iterador
         }
 
         // Si no se encuentra el animal:
-        throw runtime_error("Animal no encontrado en el stock");
+        cout<<"Animal no encontrado en el stock"<<endl;
     }
 
     void descontarAnimal(const string &nombreAnimal) {
@@ -321,11 +313,20 @@ int main() {
                 Mascota *nuevaMascotaVendida=losTresHermanos.encontrarAnimalStock(mascotaSeleccionada);
                 nuevaVenta.setMascotaVendida(*nuevaMascotaVendida);
                 nuevaVenta.ingresarFechaVenta();
+                if(nuevaMascotaVendida->getVacunado()==0)
+                {
+                    string respVacunar;
+                    cout<<"Tu Mascota no esta vacunada, desea vacunarla (si/no)?"<<endl;
+                    cin>>respVacunar;
+                    if(respVacunar=="si")
+                        nuevaMascotaVendida->Vacunar();
+                }
+                losTresHermanos.agregarVenta(nuevaVenta);
                 cout<<"Quiere realizar otra compra ('si'/'continuar')?"<<endl;
                 cin>>continuar;
             }
 
-            losTresHermanos.agregarVenta(nuevaVenta);
+
         }
 
     losTresHermanos.consultaVenta();
