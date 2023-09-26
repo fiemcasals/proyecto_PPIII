@@ -286,10 +286,7 @@ int main() {
 
     string respuesta = "si";
 
-    while (respuesta != "no") {
-
-        cout << "Desea cargar un nuevo animal a la tienda? (si/no)" << endl;
-        cin >> respuesta;
+    while (respuesta == "si") {
 
         //si se desea cargar un nuevo animal se procede a cargar todos los campo
         const Mascota &nuevaMascota = crearNuevaMascota();//en la creacion de la mascota se elige el tipo y se ingresan los datos
@@ -297,8 +294,9 @@ int main() {
 
         //se procede a leer el nombre de la mascota agregada en el stock
         cout << "Mascota agregada al stock: " << nuevaMascota.getNombreMascota() << endl;
+        cout << "Desea cargar un nuevo animal a la tienda? (si/no)" << endl;
+        cin >> respuesta;
     }
-
 
         string respuestaVentas;
         cout << "Se realizo una venta? (si/no)" << endl;
